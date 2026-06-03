@@ -1,4 +1,4 @@
-# QA Flow - Workshop K6 Performance Testing
+# QA Flow - Workshop K6 Performance Testing(em andamento)
 
 ## 📖 Sobre o Projeto
 
