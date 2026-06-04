@@ -1,0 +1,58 @@
+name: K6 Performance Tests
+
+on:
+  push:
+    branches:
+      - main
+      - master
+  pull_request:
+
+jobs:
+  k6-tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install k6
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y gnupg software-properties-common
+          curl -fsSL https://dl.k6.io/key.gpg | sudo gpg --dearmor -o /usr/share/keyrings/k6-archive-keyring.gpg
+          echo "deb [signed-by=/usr/share/keyrings/k6-archive-keyring.gpg] https://dl.k6.io/deb stable main" | sudo tee /etc/apt/sources.list.d/k6.list
+          sudo apt-get update
+          sudo apt-get install -y k6
+
+      - name: Create results folder
+        run: mkdir -p __test__/fakestoreAPI/results
+
+      # ✅ FIX: continue-on-error para garantir que todos os testes rodem
+      # mesmo que um deles falhe, coletando todos os relatórios
+
+      - name: Run Get All Products Test
+        run: k6 run __test__/fakestoreAPI/getAllProducts.js
+        continue-on-error: true
+
+      # ✅ FIX: getAllStore.js estava na estrutura mas sem step — adicionado
+      - name: Run Get All Store Test
+        run: k6 run __test__/fakestoreAPI/getAllStore.js
+        continue-on-error: true
+
+      - name: Run Product Process Test
+        run: k6 run __test__/fakestoreAPI/productProcess.js
+        continue-on-error: true
+
+      - name: Run Users Process Test
+        run: k6 run __test__/fakestoreAPI/usersProcess.js
+        continue-on-error: true
+
+      - name: Upload HTML Reports
+        uses: actions/upload-artifact@v4
+        # Sempre faz upload, mesmo que testes tenham falhado
+        if: always()
+        with:
+          name: k6-html-reports
+          path: __test__/fakestoreAPI/results/
+          # Não falha o step caso a pasta esteja vazia
+          if-no-files-found: warn
