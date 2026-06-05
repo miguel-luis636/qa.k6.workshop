@@ -5,25 +5,17 @@ import { htmlReport } from 'https://raw.githubusercontent.com/benc-uk/k6-reporte
 
 import { textSummary } from 'https://jslib.k6.io/k6-summary/0.0.1/index.js';
 
-export const options = {
-  stages: [
-    { duration: '30s', target: 20 },
-    { duration: '1m', target: 40 },
-    { duration: '30s', target: 0 },
-  ],
+const testConfig = JSON.parse(open('../../env/settings.json'));
+const configLoad = JSON.parse(open('../../env/config.load.json'));
 
-  thresholds: {
-    http_req_failed: ['rate<0.01'],
-    http_req_duration: ['p(95)<600'],
-    http_req_waiting: ['avg<300'],
-    http_req_connecting: ['p(95)<100'],
-    checks: ['rate>0.99'],
-  },
+export const options = {
+  stages: configLoad.STAGES,
+  thresholds: configLoad.THRESHOLDS_GET,
 };
 
 export default function () {
 
-  const res = http.get('https://fakestoreapi.com/products');
+  const res = http.get(`${testConfig.SETTINGS.baseUrl}/products`);
 
   check(res, {
     'status 200': (r) => r.status === 200,
@@ -33,7 +25,6 @@ export default function () {
 
   sleep(1);
 }
-
 
 export function handleSummary(data) {
   return {

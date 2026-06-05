@@ -1,0 +1,22 @@
+{
+  "SETTINGS": {
+    "baseUrl": "https://fakestoreapi.com"
+  } ,
+  "PRODUCTS": {
+    "createPayload": {
+      "title": "QA K6 Product",
+      "price": 99.99,
+      "description": "Produto criado em teste de performance",
+      "image": "https://i.pravatar.cc",
+      "category": "electronic"
+    },
+
+    "updatePayload": {
+      "title": "QA K6 Updated Product",
+      "price": 150.00,
+      "description": "Produto atualizado",
+      "image": "https://i.pravatar.cc",
+      "category": "electronic"
+    }
+  }
+}

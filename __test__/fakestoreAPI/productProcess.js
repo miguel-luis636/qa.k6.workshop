@@ -4,37 +4,21 @@ import { check, sleep, group } from 'k6';
 import { htmlReport } from 'https://raw.githubusercontent.com/benc-uk/k6-reporter/main/dist/bundle.js';
 import { textSummary } from 'https://jslib.k6.io/k6-summary/0.0.1/index.js';
 
+const testConfig = JSON.parse(open('../../env/settings.json'));
+const configLoad = JSON.parse(open('../../env/config.load.json'));
+
+
 export const options = {
-  stages: [
-    { duration: '30s', target: 10 },
-    { duration: '1m', target: 20 },
-    { duration: '30s', target: 5 },
-    { duration: '20s', target: 0 },
-  ],
-
-  thresholds: {
-    http_req_failed: ['rate<0.01'],
-    http_req_duration: ['p(95)<750'],
-    checks: ['rate>0.99'],
-
-    'http_req_duration{endpoint:add-product}': ['p(95)<500'],
-    'http_req_duration{endpoint:get-product}': ['p(95)<400'],
-    'http_req_duration{endpoint:update-product}': ['p(95)<400'],
-    'http_req_duration{endpoint:delete-product}': ['p(95)<350'],
-  },
+  stages: configLoad.STAGES,
+  thresholds: configLoad.THRESHOLDS_PROCESS,
 };
 
-const BASE_URL = 'https://fakestoreapi.com';
 
 export default function () {
 
-  const payload = JSON.stringify({
-    title: 'QA K6 Product',
-    price: 99.99,
-    description: 'Produto criado em teste de performance',
-    image: 'https://i.pravatar.cc',
-    category: 'electronic',
-  });
+  const payload = JSON.stringify(testConfig.PRODUCTS.createPayload);
+
+  const updatePayload = JSON.stringify(testConfig.PRODUCTS.updatePayload);
 
   const params = {
     headers: {
@@ -47,7 +31,7 @@ export default function () {
 
   group('POST /products', () => {
 
-    const res = http.post(`${BASE_URL}/products`, payload, {...params, tags: { endpoint: 'add-product' }, }
+    const res = http.post(`${testConfig.SETTINGS.baseUrl}/products`, payload, {...params, tags: { endpoint: 'add-product' }, }
     );
 
     check(res, {
@@ -61,7 +45,7 @@ export default function () {
 
   group('GET /products/:id', () => {
 
-    const res = http.get( `${BASE_URL}/products/${productId}`,{ tags: { endpoint: 'get-product' }, }
+    const res = http.get( `${testConfig.SETTINGS.baseUrl}/products/${productId}`,{ tags: { endpoint: 'get-product' }, }
     );
 
     check(res, {
@@ -73,15 +57,7 @@ export default function () {
 
   group('PUT /products/:id', () => {
 
-    const updatedPayload = JSON.stringify({
-      title: 'QA K6 Updated Product',
-      price: 150.00,
-      description: 'Produto atualizado',
-      image: 'https://i.pravatar.cc',
-      category: 'electronic',
-    });
-
-    const res = http.put( `${BASE_URL}/products/${productId}`, updatedPayload,{ ...params, tags: { endpoint: 'update-product' },}
+    const res = http.put( `${testConfig.SETTINGS.baseUrl}/products/${productId}`, updatePayload ,{ ...params, tags: { endpoint: 'update-product' },}
     );
 
     check(res, {
@@ -93,7 +69,7 @@ export default function () {
 
   group('DELETE /products/:id', () => {
 
-    const res = http.del(`${BASE_URL}/products/${productId}`,null,{ tags: { endpoint: 'delete-product' },}
+    const res = http.del(`${testConfig.SETTINGS.baseUrl}/products/${productId}`,null,{ tags: { endpoint: 'delete-product' },}
     );
 
     check(res, {
@@ -107,7 +83,6 @@ export default function () {
 
 export function handleSummary(data) {
   return {
-
     'results/product-process-report.html': htmlReport(data, {
       title: 'Product Process Performance Report',
       debug: false,

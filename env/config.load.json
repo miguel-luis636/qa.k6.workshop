@@ -1,0 +1,68 @@
+{
+  "STAGES": [
+    {
+      "duration": "30s",
+      "target": 20
+    },
+    {
+      "duration": "1m",
+      "target": 40
+    },
+    {
+      "duration": "30s",
+      "target": 0
+    }
+  ],
+
+  "THRESHOLDS_GET": {
+    "http_req_duration": [
+      "p(95)<600"
+    ],
+
+    "http_req_failed": [
+      "rate<0.01"
+    ],
+
+    "http_req_connecting": [
+      "p(95)<100"
+    ],
+
+    "checks": [
+      "rate>0.99"
+    ]
+  },
+
+  "THRESHOLDS_PROCESS": {
+    "http_req_failed": [
+      "rate<0.01"
+    ],
+
+    "http_req_duration": [
+      "p(95)<750"
+    ],
+
+    "http_req_connecting": [
+      "p(95)<100"
+    ],
+
+    "checks": [
+      "rate>0.99"
+    ],
+
+    "http_req_duration{endpoint:add-product}": [
+      "p(95)<500"
+    ],
+
+    "http_req_duration{endpoint:get-product}": [
+      "p(95)<400"
+    ],
+
+    "http_req_duration{endpoint:update-product}": [
+      "p(95)<400"
+    ],
+
+    "http_req_duration{endpoint:delete-product}": [
+      "p(95)<350"
+    ]
+  }
+}
