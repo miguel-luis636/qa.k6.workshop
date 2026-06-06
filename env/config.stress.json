@@ -1,0 +1,62 @@
+{
+  "SCENARIOS": {
+    "stress_users": {
+      "executor": "ramping-vus",
+
+      "stages": [
+        {
+          "duration": "20s",
+          "target": 20
+        },
+        {
+          "duration": "40s",
+          "target": 80
+        },
+        {
+          "duration": "1m",
+          "target": 150
+        },
+        {
+          "duration": "30s",
+          "target": 0
+        }
+      ],
+
+      "gracefulRampDown": "30s"
+    }
+  },
+
+  "THRESHOLDS_USERS": {
+    "http_req_failed": [
+      "rate<0.01"
+    ],
+
+    "http_req_duration": [
+      "p(95)<900"
+    ],
+
+    "checks": [
+      "rate>0.99"
+    ],
+
+    "http_req_duration{endpoint:get-users}": [
+      "p(95)<500"
+    ],
+
+    "http_req_duration{endpoint:add-user}": [
+      "p(95)<700"
+    ],
+
+    "http_req_duration{endpoint:get-user-id}": [
+      "p(95)<500"
+    ],
+
+    "http_req_duration{endpoint:update-user}": [
+      "p(95)<700"
+    ],
+
+    "http_req_duration{endpoint:delete-user}": [
+      "p(95)<500"
+    ]
+  }
+}

@@ -47,6 +47,10 @@ jobs:
         run: k6 run __test__/fakestoreAPI/usersProcess.js
         continue-on-error: true
 
+      - name: Run login Process Test
+        run: k6 run __test__/fakestoreAPI/loginProcess.js
+        continue-on-error: true
+
       - name: Upload HTML Reports
         uses: actions/upload-artifact@v4
         # Sempre faz upload, mesmo que testes tenham falhado

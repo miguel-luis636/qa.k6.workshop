@@ -1,7 +1,11 @@
 {
   "SETTINGS": {
-    "baseUrl": "https://fakestoreapi.com"
-  } ,
+    "baseUrl": "https://fakestoreapi.com",
+    "headers": {
+      "Content-Type": "application/json"
+    }
+  },
+
   "PRODUCTS": {
     "createPayload": {
       "title": "QA K6 Product",
@@ -10,13 +14,25 @@
       "image": "https://i.pravatar.cc",
       "category": "electronic"
     },
-
     "updatePayload": {
       "title": "QA K6 Updated Product",
       "price": 150.00,
       "description": "Produto atualizado",
       "image": "https://i.pravatar.cc",
       "category": "electronic"
+    }
+  },
+
+  "USERS": {
+    "createPayload": {
+      "username": "qa_k6_user",
+      "email": "qa@k6.com",
+      "password": "qa123456"
+    },
+    "updatePayload": {
+      "username": "qa_k6_updated",
+      "email": "updated@k6.com",
+      "password": "updated654321"
     }
   }
 }
