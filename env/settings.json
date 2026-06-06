@@ -5,7 +5,12 @@
       "Content-Type": "application/json"
     }
   },
-
+  "AUTH": {
+    "loginPayload": {
+      "username": "mor_2314",
+      "password": "83r5^_"
+     }
+    },
   "PRODUCTS": {
     "createPayload": {
       "title": "QA K6 Product",
