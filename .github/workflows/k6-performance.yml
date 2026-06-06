@@ -48,7 +48,7 @@ jobs:
         continue-on-error: true
 
       - name: Run login Process Test
-        run: k6 run __test__/fakestoreAPI/loginProcess.js
+        run: k6 run __test__/fakestoreAPI/authProcess.js
         continue-on-error: true
 
       - name: Upload HTML Reports
