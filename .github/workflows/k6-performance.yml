@@ -27,14 +27,10 @@ jobs:
       - name: Create results folder
         run: mkdir -p __test__/fakestoreAPI/results
 
-      # ✅ FIX: continue-on-error para garantir que todos os testes rodem
-      # mesmo que um deles falhe, coletando todos os relatórios
-
       - name: Run Get All Products Test
         run: k6 run __test__/fakestoreAPI/getAllProducts.js
         continue-on-error: true
 
-      # ✅ FIX: getAllStore.js estava na estrutura mas sem step — adicionado
       - name: Run Get All Store Test
         run: k6 run __test__/fakestoreAPI/getAllStore.js
         continue-on-error: true
@@ -53,10 +49,8 @@ jobs:
 
       - name: Upload HTML Reports
         uses: actions/upload-artifact@v4
-        # Sempre faz upload, mesmo que testes tenham falhado
         if: always()
         with:
           name: k6-html-reports
           path: __test__/fakestoreAPI/results/
-          # Não falha o step caso a pasta esteja vazia
           if-no-files-found: warn
